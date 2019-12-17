@@ -134,8 +134,11 @@ body {
 
 .date-dayname {
   margin: 0;
+  text-align: left;
 }
-
+.map-pin svg {
+  vertical-align: bottom;
+}
 .date-day {
   display: block;
 }

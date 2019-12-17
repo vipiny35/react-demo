@@ -1,6 +1,10 @@
+const path = require("path");
 const express = require('express');
 var OAuth = require('oauth');
 const bodyParser = require("body-parser");
+var async = require('async');
+const fetch = require("node-fetch");
+
 
 
 const app = express();
@@ -33,6 +37,8 @@ var request = new OAuth.OAuth(
     null,
     header
 );
+app.use("/", express.static(path.join(__dirname, "../build")));
+
 
 app.get('/api', function (req, res, next) {
     // console.log(req.query);
@@ -49,6 +55,25 @@ app.get('/api', function (req, res, next) {
             }
         }
     );
+
+});
+
+app.post('/api/list', function (req, res, next) {
+    console.log(req.body.city);
+    urls = [
+        'https://weather-ydn-yql.media.yahoo.com/forecastrss?location=newyork&format=json',
+        'https://weather-ydn-yql.media.yahoo.com/forecastrss?location=mumbai&format=json',
+        'https://weather-ydn-yql.media.yahoo.com/forecastrss?location=london&format=json',
+    ]
+    async.mapLimit(urls, 5, async function (url) {
+        const response = await fetch(url)
+        return response.body
+    }, (err, results) => {
+        if (err) throw err
+        // results is now an array of the response bodies
+        console.log('done')
+        res.status(200).json({ message: results });
+    })
 
 });
 

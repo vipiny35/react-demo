@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 import "./App.css";
+import { MapPin, Sun } from 'react-feather';
+
 
 class App extends React.Component {
   constructor(props) {
@@ -8,6 +10,7 @@ class App extends React.Component {
 
     this.state = {
       visible: false,
+      day: '',
       city: 'newyork',
       data: {}
     };
@@ -24,10 +27,16 @@ class App extends React.Component {
     await axios
       .get("http://localhost:3100/api?city=" + this.state.city)
       .then(response => {
-        console.log(response.data);
+
+        var utcSeconds = response.data.current_observation.pubDate;
+        var weatherDate = new Date(0);
+        weatherDate.setUTCSeconds(utcSeconds);
+        var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        var dayOfWeek = days[weatherDate.getDay()];
         this.setState({
           visible: true,
-          data: response.data
+          day: dayOfWeek,
+          data: response.data,
         });
       })
       .catch(error => {
@@ -45,9 +54,10 @@ class App extends React.Component {
         <div className="weather-side">
           <div className="weather-gradient"></div>
           <div className="date-container">
-            <h2 className="date-dayname">{Date()}</h2><i className="location-icon" data-feather="map-pin"></i><span className="location">{this.state.data.location.city}, {this.state.data.location.region}</span>
+            <h2 className="date-dayname">{this.state.day}</h2><span className="location"><span className="map-pin"><MapPin /></span> {this.state.data.location.city}, {this.state.data.location.region}</span>
           </div>
-          <div className="weather-container"><i className="weather-icon" data-feather="sun"></i>
+          <div className="weather-container">
+            <span className="sun"><Sun size='65' /></span>
             <h1 className="weather-temp">{this.state.data.current_observation.condition.temperature}°F</h1>
             <h3 className="weather-desc">{this.state.data.current_observation.condition.text}</h3>
           </div>
@@ -68,11 +78,13 @@ class App extends React.Component {
           </div>
           <div className="week-container">
             <ul className="week-list">
-              <li className="active"><i className="day-icon" data-feather="sun"></i><span className="day-name">{this.state.data.forecasts[0].day}</span><span className="day-temp">{this.state.data.forecasts[0].low}°F</span>{this.state.data.forecasts[0].text}</li>
+              <li className="active"><i className="day-icon"></i><span className="day-name">{this.state.data.forecasts[0].day}</span><span className="day-temp">{this.state.data.forecasts[0].low}°F</span><span className="day-temp">{this.state.data.forecasts[0].high}°F</span></li>
 
-              <li className=""><i className="day-icon" data-feather="sun"></i><span className="day-name">{this.state.data.forecasts[1].day}</span><span className="day-temp">{this.state.data.forecasts[1].low}°F</span>{this.state.data.forecasts[1].text}</li>
-              <li className=""><i className="day-icon" data-feather="sun"></i><span className="day-name">{this.state.data.forecasts[2].day}</span><span className="day-temp">{this.state.data.forecasts[2].low}°F</span>{this.state.data.forecasts[2].text}</li>
-              <li className=""><i className="day-icon" data-feather="sun"></i><span className="day-name">{this.state.data.forecasts[3].day}</span><span className="day-temp">{this.state.data.forecasts[3].low}°F</span>{this.state.data.forecasts[3].text}</li>
+              <li className=""><i className="day-icon"></i><span className="day-name">{this.state.data.forecasts[1].day}</span><span className="day-temp">{this.state.data.forecasts[1].low}°F</span><span className="day-temp">{this.state.data.forecasts[1].high}°F</span></li>
+
+              <li className=""><i className="day-icon"></i><span className="day-name">{this.state.data.forecasts[2].day}</span><span className="day-temp">{this.state.data.forecasts[2].low}°F</span><span className="day-temp">{this.state.data.forecasts[2].high}°F</span></li>
+
+              <li className=""><i className="day-icon"></i><span className="day-name">{this.state.data.forecasts[3].day}</span><span className="day-temp">{this.state.data.forecasts[3].low}°F</span><span className="day-temp">{this.state.data.forecasts[3].high}°F</span></li>
 
               <div className="clear"></div>
             </ul>
