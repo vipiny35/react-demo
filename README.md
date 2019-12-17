@@ -2,9 +2,21 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-In the project directory, you can run:
+Install all the package dependencies in both reach app and backend server
+
+### `npm install`
+
+### `cd backend`
+
+### `npm install`
+
+In the react directory, you can run:
 
 ### `npm start`
+
+In the backend directory start the backend server
+
+### `node app.js`
 
 Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
